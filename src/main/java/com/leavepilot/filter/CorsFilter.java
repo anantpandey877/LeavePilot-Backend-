@@ -1,15 +1,11 @@
 package com.leavepilot.filter;
 
-import java.io.IOException;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 @WebFilter("/*")
 public class CorsFilter implements Filter {
@@ -21,27 +17,31 @@ public class CorsFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
 
+        HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest req = (HttpServletRequest) request;
 
-        HttpServletResponse res = (HttpServletResponse) response;
-
-        res.setHeader(
+        resp.setHeader(
                 "Access-Control-Allow-Origin",
-                "http://localhost:5173");
+                "http://leavepilot-anant-frontend.s3-website-us-east-1.amazonaws.com"
+        );
 
-        res.setHeader(
+        resp.setHeader(
                 "Access-Control-Allow-Methods",
-                "GET, POST, PUT, DELETE, OPTIONS");
+                "GET, POST, PUT, DELETE, OPTIONS"
+        );
 
-        res.setHeader(
+        resp.setHeader(
                 "Access-Control-Allow-Headers",
-                "Content-Type");
+                "Content-Type, Authorization"
+        );
+
+        resp.setHeader(
+                "Access-Control-Allow-Credentials",
+                "true"
+        );
 
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-
-            res.setStatus(
-                    HttpServletResponse.SC_OK);
-
+            resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
